@@ -37,83 +37,7 @@
             Please add formula with no spaces (=4+3 and not =4 + 3) did not have time for validations...
             Sum function is supported (=sum(4,3,5))
         </h1>
-        <table border="1">
-            <tr>
-                <td id="a1" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="a2" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-
-                <td id="a3" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="a4" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-            </tr>
-            <tr>
-                <td id="b1" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="b2" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-
-                <td id="b3" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="b4" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-            </tr>
-            <tr>
-                <td id="c1" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="c2" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-
-                <td id="c3" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="c4" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-            </tr>
-            <tr>
-                <td id="d1" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="d2" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-
-                <td id="d3" onmousedown="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-                <td id="d4" onclick="editCell(this)">
-                    <input onblur="showValue(this)">
-                    <span></span>
-                </td>
-            </tr>
+        <table border="1" id="myTable">
         </table>
 
         <script src="cell.js"></script>
@@ -121,24 +45,32 @@
         <script>
             let board = new Board();
 
-            for(let i=1; i<=4; i++) {
-                let cell = new Cell("a" + i, board)
-                board.addCell (cell, board)    
-            }
+            for(let rowIndex=0; rowIndex<8; rowIndex++) {
+                let row = document.createElement("tr")
+                let rowChar = String.fromCharCode(97 + rowIndex) 
+                
+                for(let i=1; i<=8; i++) {
+                    let key = rowChar = i;
+                    let cell = new Cell(key, board)
+                    board.addCell (cell, board)
 
-            for(let i=1; i<=4; i++) {
-                let cell = new Cell("b" + i, board)
-                board.addCell (cell, board)    
-            }
+                    let td = document.createElement("td")
+                    td.id = key
+                    td.onclick = function () {
+                        editCell(td)
+                    }
 
-            for(let i=1; i<=4; i++) {
-                let cell = new Cell("c" + i, board)
-                board.addCell (cell, board)    
-            }
+                    let input = document.createElement("input")
+                    input.onblur = function() {
+                        showValue(input)
+                    }
 
-            for(let i=1; i<=4; i++) {
-                let cell = new Cell("d" + i, board)
-                board.addCell (cell, board)    
+                    td.appendChild(input)
+                    td.appendChild(document.createElement("span"))
+                    row.appendChild(td)
+                }
+
+                document.getElementById("myTable").appendChild(row)
             }
 
             function editCell(el){ 
