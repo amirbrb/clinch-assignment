@@ -5,27 +5,21 @@ function Cell(key, parentBoard) {
     this.isValid = true; 
     this.parentBoard = parentBoard;
 
-    //sets cell's value
     this.set = function (userInput) {
         this.userInput = userInput.toString();
         let res = calculate (userInput, this.parentBoard, this.key);
         this.result = res.result;
         this.isValid = res.isValid;
 
-        let board = this.parentBoard
-        
-        //in case this cell is referenced by others - update other cells value
+        let board = this.parentBoard 
         if(board.loopers[this.key]) {
             board.loopers[this.key].forEach(cellKey => {
                 let cell = board.getCell(cellKey); 
-                
-                //set referencing cell's value
                 cell.set(cell.userInput);
             })
         }
     }
 
-    //get cell's value (1 is formula, 2 is calculated result 
     this.get = function (mode) {
         if(mode == 1) {
             return this.userInput;
@@ -36,8 +30,6 @@ function Cell(key, parentBoard) {
 
     function calculate(userInput, parentBoard, key) {
         const input = userInput.toString(); 
-        
-        //not a formula
         if(!input.startsWith('=')) {
             return  {
                 isValid: true,
@@ -46,8 +38,6 @@ function Cell(key, parentBoard) {
         }
         else {
             let formula = input.substr(input.indexOf('=') + 1)
-            
-            //sum formula
             if(formula.toLowerCase().startsWith('sum')) {
                 return calculateSum(formula);
             } else {
@@ -84,11 +74,12 @@ function Cell(key, parentBoard) {
         }
     }
 
-    //calculates all numbers with + sign
     function getMathematicResult(input, formula, parentBoard, key) {
         let formulaValues = formula.split('+');
         let result = 0;
         for(let i=0; i < formulaValues.length; i++) {
+
+            //try getting cell by characters 
             if(isNaN(formulaValues[i])) {
                 let cell = parentBoard.getCell(formulaValues[i]);
                 if(!cell) {
@@ -98,11 +89,15 @@ function Cell(key, parentBoard) {
                     };
                 }
                 else {
+                    //add reference between cells
                     if(!parentBoard.loopers[cell.key]) {
                         parentBoard.loopers[cell.key] = []
                     } 
                     
-                    parentBoard.loopers[cell.key].push(key)
+                    if(parentBoard.loopers[cell.key].indexOf(key) === -1) {
+                        parentBoard.loopers[cell.key].push(key)
+                    }
+
                     result += cell.result
                 }
             } else {
