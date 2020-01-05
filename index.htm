@@ -50,7 +50,7 @@
                 let rowChar = String.fromCharCode(97 + rowIndex) 
                 
                 for(let i=1; i<=8; i++) {
-                    let key = rowChar = i;
+                    let key = rowChar + i;
                     let cell = new Cell(key, board)
                     board.addCell (cell, board)
 
