@@ -1,0 +1,177 @@
+<style>
+    table {
+        padding: 10px;
+        border: 1px solid black;
+    }
+
+    table td {
+        height: 30px;
+        width: 100px;
+        cursor: pointer;
+    }
+
+    table td.invalid {
+        background: orangered;
+    }
+
+    table td input {
+        display: none;
+    }
+
+    table td.editing input {
+        display: block;
+    }
+
+    table td.editing span {
+        display: none;
+    }
+</style>
+
+
+<html>
+    
+    <body>
+        <h1>
+            Please click on a table cell to edit its formula.
+            Please click tab when editing formula in order to blur it, could have used other clicks on elements but... 
+            Please add formula with no spaces (=4+3 and not =4 + 3) did not have time for validations...
+            Sum function is supported (=sum(4,3,5))
+        </h1>
+        <table border="1">
+            <tr>
+                <td id="a1" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="a2" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+
+                <td id="a3" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="a4" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+            </tr>
+            <tr>
+                <td id="b1" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="b2" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+
+                <td id="b3" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="b4" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+            </tr>
+            <tr>
+                <td id="c1" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="c2" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+
+                <td id="c3" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="c4" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+            </tr>
+            <tr>
+                <td id="d1" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="d2" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+
+                <td id="d3" onmousedown="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+                <td id="d4" onclick="editCell(this)">
+                    <input onblur="showValue(this)">
+                    <span></span>
+                </td>
+            </tr>
+        </table>
+
+        <script src="cell.js"></script>
+        <script src="board.js"></script>
+        <script>
+            let board = new Board();
+
+            for(let i=1; i<=4; i++) {
+                let cell = new Cell("a" + i, board)
+                board.addCell (cell, board)    
+            }
+
+            for(let i=1; i<=4; i++) {
+                let cell = new Cell("b" + i, board)
+                board.addCell (cell, board)    
+            }
+
+            for(let i=1; i<=4; i++) {
+                let cell = new Cell("c" + i, board)
+                board.addCell (cell, board)    
+            }
+
+            for(let i=1; i<=4; i++) {
+                let cell = new Cell("d" + i, board)
+                board.addCell (cell, board)    
+            }
+
+            function editCell(el){ 
+                el.classList.add('editing')
+                let cell = board.getCell(el.id)
+                el.children[0].value = cell.get(1);    
+            }
+
+            function showValue(e){
+                let el = e.parentElement;
+                let cell = board.getCell(el.id)
+                cell.set(el.children[0].value)
+                
+                if(!cell.isValid) {
+                    el.classList.add('invalid')
+                } else {
+                    el.classList.remove('invalid')
+                }
+
+                el.children[1].innerHTML = cell.get(2);    
+                el.classList.remove('editing')
+                
+
+                if(board.loopers[el.id]) {
+                    board.loopers[el.id].forEach(elementId => {
+                        let input = document.getElementById(elementId).children[0]
+                        showValue(input)
+                    });
+                }
+            }
+
+        </script>
+
+    </body>
+
+</html>
